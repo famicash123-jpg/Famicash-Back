@@ -15,6 +15,7 @@
     "db:push": "prisma db push --skip-generate",
     "db:seed": "node prisma/seed.js",
     "db:seed:demo": "node prisma/seed.js --demo",
+    "db:seed:reset": "node prisma/seed.js --reset",
     "db:deploy": "prisma db push --skip-generate && node prisma/seed.js",
     "db:check": "node src/lib/prisma/check-db.js"
   },

@@ -111,7 +111,7 @@ router.get('/plantilla', async (req, res) => {
       mes: MESES_ABREV[mesActual],
       dia: '10',
       fecha: new Date(Date.UTC(anioActual, mesActual, 10)),
-      categoria: 'VI_AHORRO',
+      categoria: '0_AHORRO',
       subcategoria: '_2_AHORRO_ANTHONY',
       detalle: 'Depósito ahorro Anthony',
       monto: 1000.0,
@@ -256,8 +256,9 @@ const ALIAS_CATEGORIA = {
   lara: 'iii_lara',
   vanessa: 'iv_vanessa',
   anthony: 'v_anthony',
-  ahorro: 'vi_ahorro',
-  ahorros: 'vi_ahorro'
+  ahorro: '0_ahorro',
+  ahorros: '0_ahorro',
+  vi_ahorro: '0_ahorro'
 };
 
 function valorCelda(c) {

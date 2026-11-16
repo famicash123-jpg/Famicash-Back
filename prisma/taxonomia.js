@@ -1,10 +1,19 @@
 // ============================================================
-// Taxonomía oficial FamiCash (Brief sección 3)
-// Los nombres se conservan EXACTAMENTE (prefijos numéricos y guiones bajos)
-// porque los filtros y tablas dinámicas de Excel dependen de ellos.
+// Taxonomía oficial FamiCash (Lista exacta solicitada)
+// Los nombres se conservan EXACTAMENTE porque los filtros,
+// la Tabla Dinámica y las exportaciones a Excel dependen de ellos.
 // ============================================================
 
 export const TAXONOMIA = [
+  {
+    codigo: '0_AHORRO',
+    tipo: 'AHORRO',
+    persona: 'FAMILIA',
+    subcategorias: [
+      { codigo: '_1_AHORRO_VANESSA', persona: 'VANESSA', detalles: ['Ahorro Vanessa'] },
+      { codigo: '_2_AHORRO_ANTHONY', persona: 'ANTHONY', detalles: ['Ahorro Anthony'] }
+    ]
+  },
   {
     codigo: 'I_INGRESOS',
     tipo: 'INGRESO',
@@ -28,9 +37,10 @@ export const TAXONOMIA = [
         detalles: [
           'Internet y telefono- Claro',
           'Luz',
-          'Celular Anthony',
           'Otros servicios basicos (nube/netflix/camaras/apps)',
-          'Gastos extraordinarios (Reparación, artefactos, mantto)'
+          'Celular Anthony',
+          'Celular Vanessa',
+          'Gastos extraordinarios'
         ]
       },
       {
@@ -39,7 +49,7 @@ export const TAXONOMIA = [
           'Gasolina',
           'Transporte Anthony',
           'Transporte Vanessa',
-          'Otros Transporte (estacionamientos y peajes, SAT)',
+          'Otros Transporte (estacionamientos y peajes)',
           'Seguro Vehicular',
           'Mantenimiento vehicular - 5 KM',
           'Mecánico o reparación vehicular',
@@ -52,8 +62,7 @@ export const TAXONOMIA = [
         detalles: [
           'Nana',
           'Beneficios Nana (Gratificación, vacaciones, CTS)',
-          'Limpieza del hogar',
-          'Beneficios Limpieza del hogar (Gratificación, vacaciones, CTS)'
+          'Limpieza del hogar'
         ]
       },
       {
@@ -80,7 +89,7 @@ export const TAXONOMIA = [
         codigo: '_2_EDUCACION_LARA',
         detalles: [
           'Pensión y derecho a matricula',
-          'Utiles escolares y de soporte (juguetes/cuentos/libros/muebles de estudio/disfraces)',
+          'Utiles escolares y de soporte (juguetes/cuentos/libros)',
           'Uniforme (Casaca y pantalon/polos/short)',
           'Actividades escolares'
         ]
@@ -94,11 +103,10 @@ export const TAXONOMIA = [
         ]
       },
       { codigo: '_4_VESTIMENTA_LARA', detalles: ['Vestimenta, accesorios y calzado Lara'] },
-      // Nota: el original salta del _4 al _6 (no existe _5). Se conserva tal cual.
       {
         codigo: '_6_SALUD_LARA',
         detalles: [
-          'Consultas medicas y exámenes (Pediatra/nutricionista/neumologo/otros)',
+          'Consultas medicas y exámenes (Pediatra/nutricionista)',
           'Medicamentos o vitaminas',
           'Seguro privado de salud Lara'
         ]
@@ -107,7 +115,7 @@ export const TAXONOMIA = [
         codigo: '_7_DIVERSION_LARA',
         detalles: [
           'Fiestas infantiles y regalos (incluye también su fiesta de cumpleaños)',
-          'Gastos de diversión Lara (salidas/paseos/viajes)'
+          'Gasto de diversión Lara (salidas / paseos / viajes)'
         ]
       }
     ]
@@ -120,8 +128,11 @@ export const TAXONOMIA = [
       {
         codigo: '_1_CUIDADO_PERSONAL_VANESSA',
         detalles: [
-          'Útiles de aseo Vanessa',
-          'Cuidado Personal Vanessa (Peluquería/Botiquín/Skin care/Maquillaje)'
+          'Botiquín Personal Vanessa',
+          'Maquillaje',
+          'Otros Cuidado Personal Vanessa (Peluquería / cejas / pestañas)',
+          'Skin Care Vanessa',
+          'Útiles de aseo y cuidado personal Vanessa'
         ]
       },
       { codigo: '_2_DEPORTE_VANESSA', detalles: ['Gym, baile o yoga'] },
@@ -129,15 +140,27 @@ export const TAXONOMIA = [
         codigo: '_3_SALUD_VANESSA',
         detalles: [
           'Consultas medicas',
-          'Medicamentos o vitaminas',
-          'Seguro privado de salud Vanessa',
-          'Otra salud Vanessa'
+          'Consultas psicológicas',
+          'Medicamentos o vitaminas (Escitalopram, D3, Omega 3)',
+          'Seguro privado de salud Vanessa'
         ]
       },
-      { codigo: '_4_ESTUDIOS_VANESSA', detalles: ['Estudios Vanessa'] },
+      {
+        codigo: '_4_ESTUDIOS_VANESSA',
+        detalles: ['Ingles para los negocios', 'Otros Estudios Vanessa']
+      },
       { codigo: '_5_VESTIMENTA_VANESSA', detalles: ['Vestimenta, accesorios y calzado Vanessa'] },
-      { codigo: '_6_LEGAL_VANESSA', detalles: ['Abogados Vanessa', 'Otros Legal Vanessa'] },
-      { codigo: '_7_DIVERSION_VANESSA', detalles: ['Gastos de diversión Vanessa (salidas/paseos/viajes)'] }
+      {
+        codigo: '_6_LEGAL_VANESSA',
+        detalles: ['Abogado Giovana', 'Abogado Ytalo', 'Otros Legal Vanessa']
+      },
+      {
+        codigo: '_7_DIVERSION_VANESSA',
+        detalles: [
+          'Gastos de diversión Vanessa (salidas / paseos / viajes)',
+          'Otros Gastos de diversión Vanessa'
+        ]
+      }
     ]
   },
   {
@@ -147,30 +170,36 @@ export const TAXONOMIA = [
     subcategorias: [
       {
         codigo: '_1_CUIDADO_PERSONAL_ANTHONY',
-        detalles: ['Útiles de aseo Anthony', 'Cuidado Personal Anthony (Barber, otros)']
+        detalles: [
+          'Barbería',
+          'Botiquín Personal ANTHONY',
+          'Otros Cuidado Personal ANTHONY (Peluquería / cejas / otros)',
+          'Skin Care ANTHONY',
+          'Útiles de aseo y cuidado personal ANTHONY'
+        ]
       },
-      { codigo: '_2_DEPORTE_ANTHONY', detalles: ['Gym'] },
+      { codigo: '_2_DEPORTE_ANTHONY', detalles: ['Ropa deportiva'] },
       {
         codigo: '_3_SALUD_ANTHONY',
         detalles: [
           'Consultas medicas Anthony',
+          'Consultas psicológicas Anthony',
           'Medicamentos o vitaminas Anthony',
-          'Seguro privado de salud Anthony'
+          'Seguro privado de salud ANTHONY'
         ]
       },
-      { codigo: '_4_ESTUDIOS_ANTHONY', detalles: ['Estudios Anthony'] },
-      { codigo: '_5_VESTIMENTA_ANTHONY', detalles: ['Vestimenta, accesorios y calzado Anthony'] },
-      { codigo: '_6_DIVERSION_ANTHONY', detalles: ['Gastos de diversión Anthony (salidas/paseos/viajes)'] }
-    ]
-  },
-  {
-    codigo: 'VI_AHORRO',
-    tipo: 'AHORRO',
-    persona: 'FAMILIA',
-    subcategorias: [
-      { codigo: '_1_AHORRO_VANESSA', persona: 'VANESSA', detalles: ['Ahorro Vanessa'] },
-      { codigo: '_2_AHORRO_ANTHONY', persona: 'ANTHONY', detalles: ['Ahorro Anthony'] },
-      { codigo: '_3_AHORRO LARA', persona: 'LARA', detalles: ['Ahorro Lara'] }
+      {
+        codigo: '_4_ESTUDIOS_ANTHONY',
+        detalles: ['Ingles para los negocios Anthony', 'Otros Estudios ANTHONY']
+      },
+      { codigo: '_5_VESTIMENTA_ANTHONY', detalles: ['Vestimenta, accesorios y calzado ANTHONY'] },
+      {
+        codigo: '_6_DIVERSION_ANTHONY',
+        detalles: [
+          'Gastos de diversión ANTHONY (salidas / paseos / viajes)',
+          'Otros Gastos de diversión ANTHONY'
+        ]
+      }
     ]
   }
 ];
@@ -186,7 +215,20 @@ export const MEDIOS_PAGO = [
 
 // Favoritos iniciales por usuario (subcategorías más frecuentes)
 export const FAVORITOS_INICIALES = {
-  ANTHONY: ['_6_ALIMENTACION', '_4_TRANSPORTE', '_3_SERVICIOS_BASICOS', '_2_EDUCACION_LARA', '_1_CUIDADO_PERSONAL_ANTHONY', '_2_AHORRO_ANTHONY'],
-  VANESSA: ['_6_ALIMENTACION', '_1_CUIDADO_PERSONAL_LARA', '_6_SALUD_LARA', '_1_CUIDADO_PERSONAL_VANESSA', '_4_TRANSPORTE', '_1_AHORRO_VANESSA']
+  ANTHONY: [
+    '_6_ALIMENTACION',
+    '_4_TRANSPORTE',
+    '_3_SERVICIOS_BASICOS',
+    '_2_EDUCACION_LARA',
+    '_1_CUIDADO_PERSONAL_ANTHONY',
+    '_2_AHORRO_ANTHONY'
+  ],
+  VANESSA: [
+    '_6_ALIMENTACION',
+    '_1_CUIDADO_PERSONAL_LARA',
+    '_6_SALUD_LARA',
+    '_1_CUIDADO_PERSONAL_VANESSA',
+    '_4_TRANSPORTE',
+    '_1_AHORRO_VANESSA'
+  ]
 };
-

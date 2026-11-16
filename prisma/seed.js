@@ -5,8 +5,20 @@ import { TAXONOMIA, MEDIOS_PAGO, FAVORITOS_INICIALES } from './taxonomia.js';
 const prisma = new PrismaClient();
 
 // El dataset demo BORRA transacciones, presupuestos y objetivos.
-// Solo se ejecuta de forma explícita: `npm run db:seed:demo` o SEED_DEMO=true.
+// Solo se ejecuta de forma explícita: `npm run db:seed:demo`, `npm run db:seed:reset` o SEED_DEMO=true.
 const RUN_DEMO = process.argv.includes('--demo') || process.env.SEED_DEMO === 'true';
+const RUN_RESET = process.argv.includes('--reset') || process.env.SEED_RESET === 'true';
+
+async function limpiarBaseCompleta() {
+  console.log('🧹 Limpiando datos actuales (transacciones, favoritos, presupuestos, objetivos y taxonomía)...');
+  await prisma.transaccion.deleteMany({});
+  await prisma.favorito.deleteMany({});
+  await prisma.presupuesto.deleteMany({});
+  await prisma.objetivoAhorro.deleteMany({});
+  await prisma.detalle.deleteMany({});
+  await prisma.subcategoria.deleteMany({});
+  await prisma.categoria.deleteMany({});
+}
 
 async function seedTaxonomia() {
   // Solo crea lo que falta; nunca modifica registros existentes (update: {}).
@@ -129,21 +141,20 @@ async function seedUltimos4Meses() {
     ['_6_SALUD_LARA', 1, 95, 35, 1, 'Cotidiano', 'TC PERSONAL VANESSA', 'Vitaminas / farmacia pediátrica'],
 
     // IV. VANESSA
-    ['_1_CUIDADO_PERSONAL_VANESSA', 1, 190, 60, 1, 'Cotidiano', 'TC PERSONAL VANESSA', 'Cuidado personal y salón Vanessa'],
+    ['_1_CUIDADO_PERSONAL_VANESSA', 0, 190, 60, 1, 'Cotidiano', 'TC PERSONAL VANESSA', 'Cuidado personal y salón Vanessa'],
     ['_2_DEPORTE_VANESSA', 0, 180, 0, 1, 'Fijo', 'TC PERSONAL VANESSA', 'Gimnasio / pilates Vanessa'],
-    ['_5_SALUD_VANESSA', 1, 85, 30, 1, 'Cotidiano', 'YAPE/PLIN/TRANSFERENCIA VANESSA', 'Farmacia y suplementos Vanessa'],
+    ['_3_SALUD_VANESSA', 0, 85, 30, 1, 'Cotidiano', 'YAPE/PLIN/TRANSFERENCIA VANESSA', 'Consulta médica Vanessa'],
     ['_7_DIVERSION_VANESSA', 0, 175, 50, 1, 'Extra', 'TC PERSONAL VANESSA', 'Cena con amigas / café'],
 
     // V. ANTHONY
-    ['_1_CUIDADO_PERSONAL_ANTHONY', 1, 55, 10, 1, 'Cotidiano', 'YAPE/PLIN/TRANSFERENCIA ANTHONY', 'Barbería y cuidado personal Anthony'],
-    ['_2_DEPORTE_ANTHONY', 0, 160, 0, 1, 'Fijo', 'TC PERSONAL ANTHONY', 'Entrenamiento y pádel / fútbol Anthony'],
-    ['_5_SALUD_ANTHONY', 1, 70, 25, 1, 'Cotidiano', 'YAPE/PLIN/TRANSFERENCIA ANTHONY', 'Farmacia Anthony'],
+    ['_1_CUIDADO_PERSONAL_ANTHONY', 0, 55, 10, 1, 'Cotidiano', 'YAPE/PLIN/TRANSFERENCIA ANTHONY', 'Barbería y cuidado personal Anthony'],
+    ['_2_DEPORTE_ANTHONY', 0, 160, 0, 1, 'Fijo', 'TC PERSONAL ANTHONY', 'Ropa deportiva Anthony'],
+    ['_3_SALUD_ANTHONY', 0, 70, 25, 1, 'Cotidiano', 'YAPE/PLIN/TRANSFERENCIA ANTHONY', 'Consulta médica Anthony'],
     ['_6_DIVERSION_ANTHONY', 0, 190, 60, 1, 'Extra', 'TC PERSONAL ANTHONY', 'Reunión y parrilla amigos'],
 
-    // VI. AHORRO
+    // 0. AHORRO
     ['_1_AHORRO_VANESSA', 0, 1000, 200, 1, 'Fijo', 'CUENTA BCP', 'Aporte mensual ahorro vacaciones (Vanessa)'],
-    ['_2_AHORRO_ANTHONY', 0, 1200, 200, 1, 'Fijo', 'CUENTA BCP', 'Aporte mensual fondo de emergencia (Anthony)'],
-    ['_3_AHORRO LARA', 0, 350, 0, 1, 'Fijo', 'CUENTA BCP', 'Ahorro mensual fondo universitario Lara']
+    ['_2_AHORRO_ANTHONY', 0, 1200, 200, 1, 'Fijo', 'CUENTA BCP', 'Aporte mensual fondo de emergencia (Anthony)']
   ];
 
   const hoy = new Date();
@@ -202,10 +213,9 @@ async function seedUltimos4Meses() {
 
   await prisma.transaccion.createMany({ data: dataTx });
 
-  // Objetivos de ahorro vinculados a las subcategorías de VI_AHORRO
+  // Objetivos de ahorro vinculados a las subcategorías de 0_AHORRO
   const ahorroV = bySub('_1_AHORRO_VANESSA');
   const ahorroA = bySub('_2_AHORRO_ANTHONY');
-  const ahorroL = bySub('_3_AHORRO LARA');
 
   await prisma.objetivoAhorro.createMany({
     data: [
@@ -226,15 +236,6 @@ async function seedUltimos4Meses() {
         responsable: 'VANESSA',
         subcategoriaAhorroId: ahorroV?.id,
         fechaObjetivo: new Date(Date.UTC(hoy.getFullYear() + 1, 1, 15))
-      },
-      {
-        nombre: 'Fondo Educativo de Lara',
-        tipo: 'Educación',
-        montoMeta: 15000,
-        montoInicial: 4000,
-        responsable: 'LARA',
-        subcategoriaAhorroId: ahorroL?.id,
-        fechaObjetivo: new Date(Date.UTC(hoy.getFullYear() + 1, 11, 1))
       }
     ]
   });
@@ -268,17 +269,36 @@ async function seedUltimos4Meses() {
 }
 
 async function main() {
-  console.log(`🌱 Ejecutando Seed de FamiCash (${RUN_DEMO ? 'base + DEMO 4 meses' : 'solo datos base, no destructivo'})...`);
+  // Si existe la taxonomía antigua (VI_AHORRO) o se pidió --reset, regeneramos todo limpiamente
+  const tieneTaxonomiaAntigua = Boolean(
+    await prisma.categoria.findUnique({ where: { codigo: 'VI_AHORRO' } })
+  );
+  const debeResetear = RUN_RESET || tieneTaxonomiaAntigua;
+
+  console.log(
+    `🌱 Ejecutando Seed de FamiCash (${
+      debeResetear
+        ? 'RESET COMPLETO + nueva taxonomía + DEMO 4 meses'
+        : RUN_DEMO
+          ? 'base + DEMO 4 meses'
+          : 'solo datos base, no destructivo'
+    })...`
+  );
+
+  if (debeResetear) {
+    await limpiarBaseCompleta();
+  }
+
   await seedTaxonomia();
   await seedMediosPago();
   await seedUsuarios();
-  // Demo: forzada con --demo, o automática si la BD aún no tiene movimientos (no borra nada real)
+
   const totalTx = await prisma.transaccion.count();
-  if (RUN_DEMO || totalTx === 0) {
-    if (!RUN_DEMO) console.log('ℹ️  BD sin movimientos: cargando dataset demo inicial.');
+  if (debeResetear || RUN_DEMO || totalTx === 0) {
+    if (!debeResetear && !RUN_DEMO) console.log('ℹ️  BD sin movimientos: cargando dataset demo inicial.');
     await seedUltimos4Meses();
   } else {
-    console.log(`ℹ️  Dataset demo omitido: ya existen ${totalTx} movimientos (usa \`npm run db:seed:demo\` para reemplazarlos).`);
+    console.log(`ℹ️  Dataset demo omitido: ya existen ${totalTx} movimientos (usa \`npm run db:seed:reset\` para reemplazarlos).`);
   }
   console.log('🎉 Seed completado con éxito.');
 }
