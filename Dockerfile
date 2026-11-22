@@ -32,4 +32,4 @@ COPY src ./src
 
 # Railway inyecta PORT; 5000 es el valor por defecto local
 EXPOSE 5000
-CMD ["node", "src/server.js"]
+CMD ["sh", "-c", "npx prisma db push --skip-generate && node src/server.js"]
