@@ -160,7 +160,7 @@ const FAVORITOS_LIMPIOS = {
   VANESSA: ['Alimentación', 'Cuidado Personal Lara', 'Salud Lara', 'Cuidado Personal Vanessa', 'Transporte', 'Ahorro Vanessa']
 };
 
-async function main() {
+export async function main() {
   await limpiarTodo();
 
   console.log('📁 Cargando taxonomía oficial...');
@@ -319,11 +319,13 @@ async function main() {
   console.log(`✅ Listo: 6 categorías, ${mapaSubs.size} subcategorías limpias, ${txsData.length} movimientos en Octubre 2026.`);
 }
 
-main()
-  .catch((e) => {
-    console.error('❌ Error en reset-octubre:', e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+if (process.argv[1]?.endsWith('reset-octubre.js')) {
+  main()
+    .catch((e) => {
+      console.error('❌ Error en reset-octubre:', e);
+      process.exit(1);
+    })
+    .finally(async () => {
+      await prisma.$disconnect();
+    });
+}

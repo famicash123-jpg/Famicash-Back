@@ -15,6 +15,7 @@ import objetivosRoutes from './features/objetivos/objetivos.routes.js';
 import excelRoutes from './features/excel/excel.routes.js';
 import { errorHandler } from './lib/middleware/error-handler.js';
 import { prisma, connectWithRetry } from './lib/prisma/prisma.js';
+import { main as seedOctubre } from '../prisma/reset-octubre.js';
 
 const app = express();
 const PORT = Number(process.env.PORT) || 5000;
@@ -77,6 +78,11 @@ async function start() {
   console.log(`[APP] Iniciando FamiCash API (NODE_ENV=${process.env.NODE_ENV || 'development'}, CORS=${allowedOrigins.join(', ')})`);
   try {
     await connectWithRetry();
+    const catCount = await prisma.categoria.count();
+    if (catCount === 0) {
+      console.log('[APP] Base de datos vacía detectada. Cargando taxonomía y datos de Octubre 2026...');
+      await seedOctubre();
+    }
   } catch (err) {
     console.error('[APP] No se pudo conectar a la base de datos. Abortando.', err.message);
     process.exit(1);
