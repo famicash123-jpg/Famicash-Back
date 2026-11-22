@@ -124,6 +124,7 @@ router.get('/evolutivo', async (req, res) => {
     m.ingresos = round2(m.ingresos);
     m.gastos = round2(m.gastos);
     m.ahorro = round2(m.ahorro);
+    m.disponible = round2(m.ingresos - m.gastos);
   });
 
   const totales = meses.reduce(
@@ -134,7 +135,12 @@ router.get('/evolutivo', async (req, res) => {
     desde: formatFecha(desde),
     hasta: formatFecha(hasta),
     meses,
-    totales: { ingresos: round2(totales.ingresos), gastos: round2(totales.gastos), ahorro: round2(totales.ahorro) }
+    totales: {
+      ingresos: round2(totales.ingresos),
+      gastos: round2(totales.gastos),
+      ahorro: round2(totales.ahorro),
+      disponible: round2(totales.ingresos - totales.gastos)
+    }
   });
 });
 

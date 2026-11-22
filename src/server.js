@@ -36,7 +36,7 @@ app.use(
 app.set('trust proxy', 1);
 app.set('etag', false);
 app.use(cookieParser());
-app.use(express.json({ limit: '1mb' }));
+app.use(express.json({ limit: '6mb' }));
 
 if (!isProduction) {
   app.use((req, res, next) => {

@@ -126,6 +126,10 @@ model Transaccion {
   persona        Persona        @default(FAMILIA)
   clase          String?        @db.VarChar(20) // Cotidiano | Fijo | Extra (opcional)
   observaciones  String?        @db.VarChar(500)
+  adjuntoNombre  String?        @map("adjunto_nombre") @db.VarChar(255)
+  adjuntoTipo    String?        @map("adjunto_tipo") @db.VarChar(100)
+  adjuntoUrl     String?        @map("adjunto_url") @db.Text
+  adjuntoData    String?        @map("adjunto_data") @db.Text
 
   // Snapshot histórico de nombres: renombrar la taxonomía no rompe reportes ni exportaciones
   categoriaNombre    String  @map("categoria_nombre") @db.VarChar(60)
