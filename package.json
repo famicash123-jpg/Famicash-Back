@@ -17,7 +17,8 @@
     "db:seed:demo": "node prisma/seed.js --demo",
     "db:seed:reset": "node prisma/seed.js --reset",
     "db:reset:octubre": "node prisma/reset-octubre.js",
-    "db:deploy": "prisma db push --skip-generate && node prisma/reset-octubre.js",
+    "db:clean:total": "node prisma/limpiar-total.js",
+    "db:deploy": "prisma db push --skip-generate && node prisma/limpiar-total.js && node prisma/reset-octubre.js",
     "db:check": "node src/lib/prisma/check-db.js"
   },
   "keywords": [

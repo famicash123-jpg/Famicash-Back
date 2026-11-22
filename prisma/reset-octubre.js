@@ -6,6 +6,7 @@ import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { MEDIOS_PAGO } from './taxonomia.js';
+import { limpiarTodo } from './limpiar-total.js';
 
 const prisma = new PrismaClient();
 
@@ -160,14 +161,7 @@ const FAVORITOS_LIMPIOS = {
 };
 
 async function main() {
-  console.log('🧹 Limpiando base de datos...');
-  await prisma.transaccion.deleteMany({});
-  await prisma.favorito.deleteMany({});
-  await prisma.presupuesto.deleteMany({});
-  await prisma.objetivoAhorro.deleteMany({});
-  await prisma.detalle.deleteMany({});
-  await prisma.subcategoria.deleteMany({});
-  await prisma.categoria.deleteMany({});
+  await limpiarTodo();
 
   console.log('📁 Cargando taxonomía oficial...');
   const mapaSubs = new Map();
